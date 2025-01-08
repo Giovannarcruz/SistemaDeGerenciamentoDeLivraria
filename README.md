@@ -2,9 +2,12 @@
 
 Este é um sistema desenvolvido em Java para gerenciar o catálogo de uma livraria, com suporte para cadastro de livros via ISBN, gerenciamento de gêneros, pesquisa avançada, e geração de relatórios.
 O projeto utiliza PostgreSQL para persistência de dados e integração com a API OpenLibrary para busca de informações externas.
+
 **Atenção!**
 Antes de iniciar o projeto é necessário criar o banco de dados, conforme orientação à seguir e então preencher as credenciais (URL, usuário e senha de acesso ao banco) no arquivo DBConfig.properties.
+
 **Funcionalidades Principais**
+
 **Gerenciamento de Livros**
 
 - **Cadastro de Livros:**
@@ -29,10 +32,12 @@ Exclusão de livros individualmente.
   O caminho de salvamento é definido pelo usuário localmente.
 
 **Requisitos do Sistema**
+
 - Software Necessário
   Java SE Development Kit (JDK) 11 ou superior.
   Apache Maven para gerenciamento de dependências.
   PostgreSQL 14+ configurado no pgAdmin. 
+
 - Dependências,o projeto utiliza as seguintes bibliotecas externas:
   Jackson: Para manipulação de JSON.
   Apache POI: Para criação de relatórios XLS.
@@ -59,7 +64,6 @@ private static final String PASSWORD = "sua_senha";
 
 **Como Executar o Sistema**
 Clone o repositório: 
-bash
 git clone https://github.com/Giovannarcruz/SistemaDeGerenciamentoDeLivraria.git
 cd caminho_da_pasta
 Compile e execute o projeto com Maven:
