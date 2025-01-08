@@ -1,4 +1,5 @@
 **Sistema de Gerenciamento de Livraria**
+
 Este é um sistema desenvolvido em Java para gerenciar o catálogo de uma livraria, com suporte para cadastro de livros via ISBN, gerenciamento de gêneros, pesquisa avançada, e geração de relatórios.
 O projeto utiliza PostgreSQL para persistência de dados e integração com a API OpenLibrary para busca de informações externas.
 **Atenção!**
