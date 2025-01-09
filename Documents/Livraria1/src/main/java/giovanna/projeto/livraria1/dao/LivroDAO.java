@@ -273,17 +273,17 @@ public class LivroDAO {
      * @return Lista de livros encontrados que pertencem ao gênero especificado.
      * @throws SQLException Caso ocorra um erro ao realizar a operação no banco.
      */
-    public List<Livro> buscarLivrosPorGeneros(int genero_id) throws SQLException {
+    public List<Livro> buscarLivrosPorGeneros(int genero_id, int etiqueta_livro) throws SQLException {
         List<Livro> livros = new ArrayList<>();
         String query = "SELECT l.*, g.nome AS genero_nome FROM livros l "
                 + "JOIN generos g ON l.genero_id = g.id "
-                + "WHERE l.genero_id = ?"; // Filtro por gênero
+                + "WHERE l.genero_id = ? AND etiqueta_livro<>?"; // Filtro por gênero excluindo o livro filtrado
 
         try (Connection connection = ConnectionFactory.getConnection(); PreparedStatement stmt = connection.prepareStatement(query)) {
 
-            // Define o parâmetro de gênero
+            // Define os parâmetros
             stmt.setInt(1, genero_id);
-
+            stmt.setInt(2,etiqueta_livro);
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
                     livros.add(criarLivroDoResultSet(rs)); // Cria e adiciona o livro à lista

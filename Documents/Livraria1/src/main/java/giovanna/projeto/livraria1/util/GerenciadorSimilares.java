@@ -62,7 +62,7 @@ public class GerenciadorSimilares {
                     // Para cada livro, busca outros livros do mesmo gênero
                     for (Livro livro : todosOsLivros) {
                         // A busca agora utiliza o novo método que retorna livros do mesmo gênero, excluindo o próprio livro
-                        List<Livro> livrosDoMesmoGenero = livroService.buscarLivrosPorGeneros(livro.getGenero_id());
+                        List<Livro> livrosDoMesmoGenero = livroService.buscarLivrosPorGeneros(livro.getGenero_id(), livro.getEtiqueta_livro());
 
                         if (livrosDoMesmoGenero != null) {
                             // Verifica e adiciona as relações de similaridade entre os livros

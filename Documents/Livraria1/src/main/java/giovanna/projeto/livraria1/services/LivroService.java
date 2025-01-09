@@ -211,12 +211,13 @@ public class LivroService {
      * </p>
      *
      * @param generoId ID do gênero utilizado como filtro para a busca.
+     * @param etiqueta_livro etiqueta do livro utilizado como parâmetro, ele não será retornado junto
      * @return Lista de livros encontrados que pertencem ao gênero especificado.
      */
-    public List<Livro> buscarLivrosPorGeneros(int generoId) {
+    public List<Livro> buscarLivrosPorGeneros(int generoId, int etiqueta_livro) {
         try {
             // Chama o método do DAO para buscar os livros por gênero
-            return livroDAO.buscarLivrosPorGeneros(generoId);
+            return livroDAO.buscarLivrosPorGeneros(generoId, etiqueta_livro);
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, "Erro ao buscar livros por gênero no serviço: " + generoId, e);
             throw new RuntimeException("Erro ao buscar livros por gênero", e);

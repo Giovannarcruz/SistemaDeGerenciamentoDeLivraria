@@ -16,10 +16,8 @@ import java.awt.*;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.rpc.ServiceException;
@@ -311,7 +309,7 @@ public class LivroDialog extends JDialog {
             // Verifica se o livro tem um gênero
             if (livro.getGeneroNome() != null && !livro.getGeneroNome().isEmpty()) {
                 // Procura livros com o mesmo gênero
-                List<Livro> livrosSimilares = livroDAO.buscarLivrosPorGeneros(livro.getGenero_id());
+                List<Livro> livrosSimilares = livroDAO.buscarLivrosPorGeneros(livro.getGenero_id(), livro.getEtiqueta_livro());
 
                 // Filtra os livros que já estão como similares para evitar duplicidade
                 for (Livro similar : livrosSimilares) {
