@@ -38,12 +38,14 @@ Bem-vindo ao **Sistema de Gerenciamento de Livraria**! Este sistema foi desenvol
 ## **Configuração do Banco de Dados**
 
 ### **Criação do Banco**
-1. No **pgAdmin**, crie um banco de dados chamado `livraria`.
+1. Crie um banco de dados chamado `livraria` utilizando a interface do **pgAdmin** ou via terminal com o comando:
+   ```sql
+   CREATE DATABASE livraria;
+   ```
 2. Execute os scripts localizados em:
    ```
    src/main/java/giovanna/projeto/livraria1/resources/script
    ```
-   - `ScriptCriacaoBD`: Cria o banco de dados.
    - `ScriptCriacaoTabelas`: Cria tabelas, triggers e funções.
 
 ### **Configuração no Código**
@@ -81,6 +83,23 @@ jdbc.password=sua_senha
    ```
    Livraria1Application
    ```
+
+---
+
+## **Fluxo de Cadastro**
+
+1. **Cadastro de Gêneros**:
+   - Antes de cadastrar livros, é necessário cadastrar os gêneros disponíveis no sistema.
+   - No menu principal, acesse **Cadastro > Gênero**.
+   - Utilize as opções para:
+     - Incluir: Insira o nome do gênero e clique em "Salvar".
+     - Editar: Selecione o gênero desejado, edite o nome e clique em "Salvar".
+     - Excluir: Selecione o gênero desejado e clique em "Excluir".
+
+2. **Cadastro de Livros**:
+   - Após cadastrar os gêneros, acesse **Cadastro > Livro**.
+   - Preencha os campos obrigatórios, incluindo a associação de um gênero ao livro.
+   - O cadastro pode ser realizado manualmente ou via ISBN (integrado com a API OpenLibrary).
 
 ---
 
