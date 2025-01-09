@@ -2,83 +2,69 @@
 -- SCRIPT 2: Criação das Tabelas, Funções e Triggers no banco "Livraria"
 -- ************************************************************
 
--- INSTRUÇÕES:
--- 1. Antes de rodar este script, certifique-se de estar conectado ao banco de dados "Livraria".
---    Se não estiver conectado, siga o próximo passo:
---    - No pgAdmin, clique no banco de dados "Livraria" na árvore de objetos e clique em "Conectar".
--- 2. Após a conexão, execute este script para criar as tabelas, funções e triggers no banco de dados.
-
 -- Criação da tabela de gêneros
--- Table: public.generos
-
--- DROP TABLE IF EXISTS public.generos;
-
 CREATE TABLE IF NOT EXISTS public.generos
 (
     id SERIAL PRIMARY KEY,
     nome VARCHAR(50) NOT NULL UNIQUE
-    CONSTRAINT generos_pkey PRIMARY KEY (id),
-    CONSTRAINT generos_nome_key UNIQUE (nome)
 )
-
 TABLESPACE pg_default;
 
 ALTER TABLE IF EXISTS public.generos
-    OWNER to postgres;
+    OWNER TO postgres;
 
 -- Criação da tabela de livros
 CREATE TABLE IF NOT EXISTS public.livros
 (
-    etiqueta_livro smallint PRIMARY KEY,
-    titulo character varying(80),
-    autor character varying(80),
-    editora character varying(50),
-     genero_id integer,
-    isbn character varying(13) UNIQUE,
-    data_publicacao date,
-    data_inclusao timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
-    data_alteracao timestamp without time zone DEFAULT CURRENT_TIMESTAMP
+    etiqueta_livro INTEGER PRIMARY KEY,
+    titulo VARCHAR(80),
+    autor VARCHAR(80),
+    editora VARCHAR(50),
+    genero_id INTEGER,
+    isbn VARCHAR(13) UNIQUE,
+    data_publicacao DATE,
+    data_inclusao TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    data_alteracao TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_genero FOREIGN KEY (genero_id) REFERENCES public.generos (id)
 );
 
--- Função para atualizar a data de inclusão
-CREATE OR REPLACE FUNCTION public.fn_atualizar_data_inclusao() 
+ALTER TABLE IF EXISTS public.livros OWNER TO postgres;
+
+-- Função para atualizar a data de alteração
+CREATE OR REPLACE FUNCTION public.fn_atualizar_data_alteracao() 
 RETURNS trigger AS $$
 BEGIN
-    NEW.data_inclusao = CURRENT_TIMESTAMP;
+    NEW.data_alteracao = CURRENT_TIMESTAMP;
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
--- Função para atualizar a data de alteração
--- FUNCTION: public.fn_gerar_etiqueta()
--- DROP FUNCTION IF EXISTS public.fn_gerar_etiqueta();
+-- Função para gerar etiqueta única
 CREATE OR REPLACE FUNCTION public.fn_gerar_etiqueta()
-    RETURNS trigger
-    LANGUAGE 'plpgsql'
-    COST 100
-    VOLATILE NOT LEAKPROOF
-AS $BODY$
+RETURNS trigger AS $$
+DECLARE
+    etiqueta_nova INTEGER;
 BEGIN
-	-- cálculo para gerar um número aleatório de 4 dígitos, new retorna a coluna com o valor alterado.
-	NEW.etiqueta_livro := FLOOR(random()*(9999-1000+1+1000));
-	RETURN NEW;
+    LOOP
+        etiqueta_nova := FLOOR(random() * (9999 - 1000 + 1) + 1000);
+        -- Verifica se o valor já existe
+        IF NOT EXISTS (SELECT 1 FROM public.livros WHERE etiqueta_livro = etiqueta_nova) THEN
+            NEW.etiqueta_livro := etiqueta_nova;
+            EXIT;
+        END IF;
+    END LOOP;
+    RETURN NEW;
 END;
-$BODY$;
+$$ LANGUAGE plpgsql;
 
 ALTER FUNCTION public.fn_gerar_etiqueta()
     OWNER TO postgres;
-
 
 -- Criação dos triggers
 CREATE TRIGGER trg_data_alteracao
     BEFORE UPDATE ON public.livros
     FOR EACH ROW
     EXECUTE FUNCTION public.fn_atualizar_data_alteracao();
-
-CREATE TRIGGER trg_data_inclusao
-    BEFORE INSERT ON public.livros
-    FOR EACH ROW
-    EXECUTE FUNCTION public.fn_atualizar_data_inclusao();
 
 CREATE TRIGGER trg_gerar_etiqueta
     BEFORE INSERT ON public.livros
@@ -88,17 +74,17 @@ CREATE TRIGGER trg_gerar_etiqueta
 -- Criação da tabela de livros semelhantes
 CREATE TABLE IF NOT EXISTS public.livros_semelhantes
 (
-    etiqueta_livro integer NOT NULL,
-    etiqueta_semelhante integer NOT NULL,
+    etiqueta_livro INTEGER NOT NULL,
+    etiqueta_semelhante INTEGER NOT NULL,
     PRIMARY KEY (etiqueta_livro, etiqueta_semelhante),
     FOREIGN KEY (etiqueta_livro) REFERENCES public.livros (etiqueta_livro) ON DELETE CASCADE,
     FOREIGN KEY (etiqueta_semelhante) REFERENCES public.livros (etiqueta_livro) ON DELETE CASCADE
 );
 
+ALTER TABLE IF EXISTS public.livros_semelhantes OWNER TO postgres;
+
 -- Ajustar propriedade de ownership das tabelas
 ALTER TABLE IF EXISTS public.generos OWNER TO postgres;
-ALTER TABLE IF EXISTS public.livros OWNER TO postgres;
-ALTER TABLE IF EXISTS public.livros_semelhantes OWNER TO postgres;
 
 -- ************************************************************
 -- INSTRUÇÕES FINAIS:
