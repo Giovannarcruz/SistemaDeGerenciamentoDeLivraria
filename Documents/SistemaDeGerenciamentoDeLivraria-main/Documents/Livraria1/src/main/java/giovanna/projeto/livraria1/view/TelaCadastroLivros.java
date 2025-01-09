@@ -305,4 +305,5 @@ public class TelaCadastroLivros extends JPanel {
     private void atualizarTabela(ActionEvent e) {
         carregarLivros(); // Recarrega os livros
     }
+    
 }
