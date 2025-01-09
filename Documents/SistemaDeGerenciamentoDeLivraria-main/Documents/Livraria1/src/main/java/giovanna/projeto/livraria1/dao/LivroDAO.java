@@ -283,7 +283,7 @@ public class LivroDAO {
 
             // Define os parâmetros
             stmt.setInt(1, genero_id);
-            stmt.setInt(2,etiqueta_livro);
+            stmt.setInt(2, etiqueta_livro);
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
                     livros.add(criarLivroDoResultSet(rs)); // Cria e adiciona o livro à lista
@@ -389,4 +389,66 @@ public class LivroDAO {
             }
         }
     }
+
+    /**
+     * Busca livros com base em um texto de filtro que pode corresponder a
+     * qualquer campo relevante. Realiza um JOIN entre as tabelas `livros` e
+     * `generos` para buscar pelo nome do gênero.
+     *
+     * @param filtro Texto a ser pesquisado nos campos título, autor, gênero
+     * (nome) ou ISBN.
+     * @return Lista de livros que correspondem ao filtro.
+     * @throws SQLException Caso ocorra erro na execução da consulta.
+     */
+    public List<Livro> buscarLivrosPorFiltro(String filtro) throws SQLException {
+        String sql = """
+                 SELECT livros.etiqueta_livro, livros.titulo, livros.autor, livros.isbn, 
+                        livros.editora, livros.data_publicacao, generos.nome AS genero_nome
+                 FROM livros
+                 JOIN generos ON livros.genero_id = generos.id
+                 WHERE livros.titulo ILIKE ? 
+                    OR livros.autor ILIKE ? 
+                    OR generos.nome ILIKE ? 
+                    OR livros.isbn ILIKE ?
+                    OR CAST(livros.etiqueta_livro AS TEXT) ILIKE ? 
+                    OR livros.data_publicacao::TEXT ILIKE ?
+                 """;
+
+        try (Connection connection = ConnectionFactory.getConnection();
+             PreparedStatement stmt = connection.prepareStatement(sql)) {
+
+            // Configura o mesmo parâmetro para todos os campos com `%` para busca parcial
+            String likeFiltro = "%" + filtro + "%";
+            stmt.setString(1, likeFiltro);
+            stmt.setString(2, likeFiltro);
+            stmt.setString(3, likeFiltro);
+            stmt.setString(4, likeFiltro);
+            stmt.setString(5, likeFiltro);
+            stmt.setString(6, likeFiltro);
+
+            List<Livro> livros = new ArrayList<>();
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Livro livro = new Livro();
+                    livro.setEtiqueta_livro(rs.getInt("etiqueta_livro"));
+                    livro.setTitulo(rs.getString("titulo"));
+                    livro.setAutor(rs.getString("autor"));
+                    livro.setIsbn(rs.getString("isbn"));
+                    livro.setEditora(rs.getString("editora"));
+
+                    Date sqlDate = rs.getDate("data_publicacao");
+                    if (sqlDate != null) {
+                        livro.setData_publicacao(sqlDate.toLocalDate());
+                    }
+                    // Define o nome do gênero retornado pelo JOIN
+                    livro.setGeneroNome(rs.getString("genero_nome"));
+
+                    livros.add(livro); // Adiciona o livro à lista
+                }
+            }
+
+            return livros; // Retorna a lista de livros encontrados
+        }
+    }
+
 }

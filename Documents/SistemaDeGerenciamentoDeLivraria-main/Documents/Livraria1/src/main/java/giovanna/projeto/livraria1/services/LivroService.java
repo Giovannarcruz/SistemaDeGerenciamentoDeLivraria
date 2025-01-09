@@ -65,12 +65,12 @@ public class LivroService {
         if (livro.getTitulo() == null || livro.getTitulo().isBlank()) {
             throw new ServiceException("Título é obrigatório.");
         }
-        // Verifica se contém apenas números
-        if (!livro.getIsbn().matches("\\d+")) { 
-            throw new ServiceException("ISBN deve conter apenas números.");
-        }
         if (livro.getIsbn() == null || livro.getIsbn().length() != 13) {
             throw new ServiceException("ISBN deve conter 13 caracteres.");
+        }
+        // Verifica se contém apenas números
+        if (!livro.getIsbn().matches("\\d+")) {
+            throw new ServiceException("ISBN deve conter apenas números.");
         }
         if (livro.getAutor() == null || livro.getAutor().isBlank()) {
             throw new ServiceException("Autor é obrigatório.");
@@ -488,6 +488,23 @@ public class LivroService {
 
         return livros; // Retorna a lista de livros encontrados
     }
-    
+
+    /**
+     * Busca livros que correspondem ao filtro fornecido. O filtro pode ser
+     * aplicado em campos como título, autor, gênero (nome) ou ISBN.
+     *
+     * @param filtro Texto a ser pesquisado nos campos relevantes.
+     * @return Lista de livros que correspondem ao filtro.
+     * @throws ServiceException Caso ocorra erro na execução da consulta.
+     */
+    public List<Livro> buscarLivrosPorFiltro(String filtro) throws ServiceException {
+        try {
+            LivroDAO livroDAO = new LivroDAO(); // Instancia o DAO
+            return livroDAO.buscarLivrosPorFiltro(filtro); // Chama o método do DAO
+        } catch (SQLException ex) {
+            LOGGER.log(Level.SEVERE, "Erro ao buscar livros por filtro", ex);
+            throw new ServiceException("Erro ao buscar livros por filtro: " + ex.getMessage(), ex);
+        }
+    }
 
 }

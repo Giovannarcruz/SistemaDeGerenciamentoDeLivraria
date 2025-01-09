@@ -8,6 +8,10 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.sql.SQLException;
@@ -17,8 +21,9 @@ import java.util.logging.Logger;
 import javax.xml.rpc.ServiceException;
 
 /**
- * Classe responsável pelo cadastro de livros, incluindo funcionalidades como busca,
- * edição, exclusão, e integração com a API OpenLibrary para cadastrar livros via ISBN.
+ * Classe responsável pelo cadastro de livros, incluindo funcionalidades como
+ * busca, edição, exclusão, e integração com a API OpenLibrary para cadastrar
+ * livros via ISBN.
  */
 public class TelaCadastroLivros extends JPanel {
 
@@ -32,23 +37,61 @@ public class TelaCadastroLivros extends JPanel {
     private final JButton btnAtualizar; // Botão de atualização da tabela
 
     /**
-     * Construtor da classe TelaCadastroLivros.
-     * Inicializa a interface gráfica e os componentes necessários para o cadastro de livros.
+     * Construtor da classe TelaCadastroLivros. Inicializa a interface gráfica e
+     * os componentes necessários para o cadastro de livros.
      *
      * @throws ServiceException Caso ocorra um erro nos serviços utilizados.
-     * @throws SQLException     Caso ocorra erro de conexão com o banco de dados.
+     * @throws SQLException Caso ocorra erro de conexão com o banco de dados.
      */
     public TelaCadastroLivros() throws ServiceException, SQLException {
         this.parentFrame = parentFrame;
         setLayout(new BorderLayout()); // Definindo o layout principal
 
-        // Painel superior com botão de atualização
+        // Painel superior com botão de atualização e campo de Filtrar dados
         JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
-        txtPesquisa = new JTextField(20); // Campo de pesquisa
+        // Campo de pesquisa
+        txtPesquisa = new JTextField(20);
+        JTextField textField = new JTextField();
+
+        // Texto de dica (placeholder)
+        String placeholder = "Filtrar dados";
+
+        // Configuração inicial do placeholder
+        txtPesquisa.setText(placeholder);
+        txtPesquisa.setForeground(Color.LIGHT_GRAY);
+
+        // Adiciona um FocusListener para gerenciar o comportamento
+        txtPesquisa.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                // Remove o placeholder ao ganhar o foco
+                if (txtPesquisa.getText().equals(placeholder)) {
+                    txtPesquisa.setText("");
+                    txtPesquisa.setForeground(Color.BLACK);
+                }
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                // Restaura o placeholder se o campo estiver vazio ao perder o foco
+                if (txtPesquisa.getText().isEmpty()) {
+                    txtPesquisa.setText(placeholder);
+                    txtPesquisa.setForeground(Color.LIGHT_GRAY);
+                }
+            }
+        });
+        // Adiciona um KeyListener para filtrar livros conforme o usuário digita
+        txtPesquisa.addKeyListener(new KeyAdapter() {
+            public void keyReleased(KeyEvent e) {
+                filtrarLivros(txtPesquisa.getText().trim()); // Filtra os livros conforme o texto
+            }
+        });
+        //Botão Atualizar
         btnAtualizar = new JButton("Atualizar"); // Botão de atualizar tabela
         btnAtualizar.addActionListener(this::atualizarTabela); // Evento de clique no botão de atualizar
-
-        topPanel.add(btnAtualizar); // Adiciona o botão de atualização no painel superior
+        // Adiciona o botão de atualização e campo de pesquisa no painel superior
+        topPanel.add(txtPesquisa);
+        topPanel.add(btnAtualizar);
         add(topPanel, BorderLayout.NORTH);
 
         // Configuração da tabela com cabeçalhos
@@ -68,7 +111,8 @@ public class TelaCadastroLivros extends JPanel {
     }
 
     /**
-     * Cria o painel com os botões de inclusão, edição, exclusão e cadastro via ISBN.
+     * Cria o painel com os botões de inclusão, edição, exclusão e cadastro via
+     * ISBN.
      *
      * @return Painel de botões configurado.
      */
@@ -99,7 +143,7 @@ public class TelaCadastroLivros extends JPanel {
         painel.add(btnEditar);
         painel.add(btnExcluir);
         painel.add(btnCadastrarISBN);
-        
+
         return painel; // Retorna o painel com os botões configurados
     }
 
@@ -126,13 +170,13 @@ public class TelaCadastroLivros extends JPanel {
         modeloTabela.setRowCount(0); // Limpa a tabela
         for (Livro livro : livros) {
             modeloTabela.addRow(new Object[]{
-                    livro.getEtiqueta_livro(),
-                    livro.getIsbn(),
-                    livro.getTitulo(),
-                    livro.getAutor(),
-                    livro.getEditora(),
-                    livro.getGeneroNome(),
-                    livro.getData_publicacao()
+                livro.getEtiqueta_livro(),
+                livro.getIsbn(),
+                livro.getTitulo(),
+                livro.getAutor(),
+                livro.getEditora(),
+                livro.getGeneroNome(),
+                livro.getData_publicacao()
             });
         }
     }
@@ -172,7 +216,7 @@ public class TelaCadastroLivros extends JPanel {
             } else {
                 JOptionPane.showMessageDialog(this, "Livro não encontrado.");
             }
-        } catch (HeadlessException | SQLException  ex) {
+        } catch (HeadlessException | SQLException ex) {
             JOptionPane.showMessageDialog(this, "Erro ao editar livro: " + ex.getMessage());
             LOGGER.log(Level.SEVERE, "Erro ao editar livro", ex);
         }
@@ -233,6 +277,23 @@ public class TelaCadastroLivros extends JPanel {
         } catch (HeadlessException | SQLException ex) {
             JOptionPane.showMessageDialog(this, "Erro ao buscar livro pelo ISBN: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
             LOGGER.log(Level.SEVERE, "Erro ao buscar livro pelo ISBN", ex);
+        }
+    }
+
+    /**
+     * Filtra os livros exibidos na tabela com base no texto fornecido. O filtro
+     * é aplicado em colunas como título, autor, gênero e ISBN.
+     *
+     * @param texto Texto digitado pelo usuário no campo de filtro.
+     */
+    private void filtrarLivros(String texto) {
+        try {
+            LivroService service = new LivroService();
+            List<Livro> livrosFiltrados = service.buscarLivrosPorFiltro(texto); // Busca os livros que correspondem ao filtro
+            atualizarModeloTabela(livrosFiltrados); // Atualiza a tabela com os livros filtrados
+        } catch (ServiceException ex) {
+            JOptionPane.showMessageDialog(this, "Erro ao filtrar livros: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+            LOGGER.log(Level.SEVERE, "Erro ao filtrar livros", ex);
         }
     }
 

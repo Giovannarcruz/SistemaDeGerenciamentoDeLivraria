@@ -10,14 +10,14 @@
 --release
 17
 -sourcepath
-'C:/Users/giova/Documents/Livraria1/src/main/java'
+'C:/Users/giova/Documents/SistemaDeGerenciamentoDeLivraria-main/Documents/Livraria1/src/main/java'
 -author
 -bottom
 'Copyright &#169; 2025. All rights reserved.'
 -charset
 'UTF-8'
 -d
-'C:/Users/giova/Documents/Livraria1/target/reports/apidocs'
+'C:/Users/giova/Documents/SistemaDeGerenciamentoDeLivraria-main/Documents/Livraria1/target/reports/apidocs'
 -docencoding
 'UTF-8'
 -doctitle
@@ -127,22 +127,22 @@ C:\Users\giova\.m2\repository\org\apache\xmlbeans\xmlbeans\5.3.0\xmlbeans-5.3.0.
 C:\Users\giova\.m2\repository\org\apache\commons\commons-compress\1.27.1\commons-compress-1.27.1.jar = 1734979215287
 C:\Users\giova\.m2\repository\org\apache\commons\commons-lang3\3.17.0\commons-lang3-3.17.0.jar = 1734792979324
 C:\Users\giova\.m2\repository\org\apache\poi\poi-ooxml-schemas\4.1.2\poi-ooxml-schemas-4.1.2.jar = 1736177599823
-C:\Users\giova\Documents\Livraria1\src\main\java = 1736295046000
-C:\Users\giova\Documents\Livraria1\target\reports\apidocs\allclasses-index.html = 1736361970184
-C:\Users\giova\Documents\Livraria1\target\reports\apidocs\allpackages-index.html = 1736361970191
-C:\Users\giova\Documents\Livraria1\target\reports\apidocs\element-list = 1736361968962
-C:\Users\giova\Documents\Livraria1\target\reports\apidocs\help-doc.html = 1736361970400
-C:\Users\giova\Documents\Livraria1\target\reports\apidocs\index-all.html = 1736361970387
-C:\Users\giova\Documents\Livraria1\target\reports\apidocs\index.html = 1736361970080
-C:\Users\giova\Documents\Livraria1\target\reports\apidocs\jquery-ui.overrides.css = 1736361970468
-C:\Users\giova\Documents\Livraria1\target\reports\apidocs\member-search-index.js = 1736361970202
-C:\Users\giova\Documents\Livraria1\target\reports\apidocs\module-search-index.js = 1736361970194
-C:\Users\giova\Documents\Livraria1\target\reports\apidocs\overview-summary.html = 1736361970391
-C:\Users\giova\Documents\Livraria1\target\reports\apidocs\overview-tree.html = 1736361970070
-C:\Users\giova\Documents\Livraria1\target\reports\apidocs\package-search-index.js = 1736361970196
-C:\Users\giova\Documents\Livraria1\target\reports\apidocs\script.js = 1736361970444
-C:\Users\giova\Documents\Livraria1\target\reports\apidocs\search.js = 1736361970448
-C:\Users\giova\Documents\Livraria1\target\reports\apidocs\serialized-form.html = 1736361969525
-C:\Users\giova\Documents\Livraria1\target\reports\apidocs\stylesheet.css = 1736361970405
-C:\Users\giova\Documents\Livraria1\target\reports\apidocs\tag-search-index.js = 1736361970204
-C:\Users\giova\Documents\Livraria1\target\reports\apidocs\type-search-index.js = 1736361970198
+C:\Users\giova\Documents\SistemaDeGerenciamentoDeLivraria-main\Documents\Livraria1\src\main\java = 1736454725000
+C:\Users\giova\Documents\SistemaDeGerenciamentoDeLivraria-main\Documents\Livraria1\target\reports\apidocs\allclasses-index.html = 1736460267093
+C:\Users\giova\Documents\SistemaDeGerenciamentoDeLivraria-main\Documents\Livraria1\target\reports\apidocs\allpackages-index.html = 1736460267111
+C:\Users\giova\Documents\SistemaDeGerenciamentoDeLivraria-main\Documents\Livraria1\target\reports\apidocs\element-list = 1736460266173
+C:\Users\giova\Documents\SistemaDeGerenciamentoDeLivraria-main\Documents\Livraria1\target\reports\apidocs\help-doc.html = 1736460267261
+C:\Users\giova\Documents\SistemaDeGerenciamentoDeLivraria-main\Documents\Livraria1\target\reports\apidocs\index-all.html = 1736460267231
+C:\Users\giova\Documents\SistemaDeGerenciamentoDeLivraria-main\Documents\Livraria1\target\reports\apidocs\index.html = 1736460267054
+C:\Users\giova\Documents\SistemaDeGerenciamentoDeLivraria-main\Documents\Livraria1\target\reports\apidocs\jquery-ui.overrides.css = 1736460267313
+C:\Users\giova\Documents\SistemaDeGerenciamentoDeLivraria-main\Documents\Livraria1\target\reports\apidocs\member-search-index.js = 1736460267121
+C:\Users\giova\Documents\SistemaDeGerenciamentoDeLivraria-main\Documents\Livraria1\target\reports\apidocs\module-search-index.js = 1736460267113
+C:\Users\giova\Documents\SistemaDeGerenciamentoDeLivraria-main\Documents\Livraria1\target\reports\apidocs\overview-summary.html = 1736460267235
+C:\Users\giova\Documents\SistemaDeGerenciamentoDeLivraria-main\Documents\Livraria1\target\reports\apidocs\overview-tree.html = 1736460267048
+C:\Users\giova\Documents\SistemaDeGerenciamentoDeLivraria-main\Documents\Livraria1\target\reports\apidocs\package-search-index.js = 1736460267115
+C:\Users\giova\Documents\SistemaDeGerenciamentoDeLivraria-main\Documents\Livraria1\target\reports\apidocs\script.js = 1736460267291
+C:\Users\giova\Documents\SistemaDeGerenciamentoDeLivraria-main\Documents\Livraria1\target\reports\apidocs\search.js = 1736460267295
+C:\Users\giova\Documents\SistemaDeGerenciamentoDeLivraria-main\Documents\Livraria1\target\reports\apidocs\serialized-form.html = 1736460266573
+C:\Users\giova\Documents\SistemaDeGerenciamentoDeLivraria-main\Documents\Livraria1\target\reports\apidocs\stylesheet.css = 1736460267289
+C:\Users\giova\Documents\SistemaDeGerenciamentoDeLivraria-main\Documents\Livraria1\target\reports\apidocs\tag-search-index.js = 1736460267145
+C:\Users\giova\Documents\SistemaDeGerenciamentoDeLivraria-main\Documents\Livraria1\target\reports\apidocs\type-search-index.js = 1736460267118
