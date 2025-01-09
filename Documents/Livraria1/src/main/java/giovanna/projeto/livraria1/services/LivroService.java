@@ -68,6 +68,10 @@ public class LivroService {
         if (livro.getIsbn() == null || livro.getIsbn().length() != 13) {
             throw new ServiceException("ISBN deve conter 13 caracteres.");
         }
+        // Verifica se contém apenas números
+        if (!livro.getIsbn().matches("\\d+")) { 
+            throw new ServiceException("ISBN deve conter apenas números.");
+        }
         if (livro.getAutor() == null || livro.getAutor().isBlank()) {
             throw new ServiceException("Autor é obrigatório.");
         }
