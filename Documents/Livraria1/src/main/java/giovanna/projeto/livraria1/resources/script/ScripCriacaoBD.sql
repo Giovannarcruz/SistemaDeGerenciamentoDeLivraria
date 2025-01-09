@@ -7,7 +7,8 @@
 -- mas você precisará se conectar manualmente a ele para continuar.
 
 -- Criação do banco de dados
-CREATE DATABASE "Livraria"
+CREATE DATABASE "Livraria";
+
 COMMENT ON DATABASE "Livraria"
     IS 'Base de dados criada para o cenário do recrutamento interno para a vaga de Programador Java Jr.';
 
