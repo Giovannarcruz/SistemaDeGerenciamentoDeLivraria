@@ -266,7 +266,6 @@ public class LivroDialog extends JDialog {
 
         // Abre o diálogo de seleção de livros similares
         SelecionarLivroDialog selecionarLivroDialog = new SelecionarLivroDialog(this, livro.getEtiqueta_livro());
-        selecionarLivroDialog.setVisible(true);
 
         // Obtém a lista de livros selecionados
         List<Integer> selecionados = selecionarLivroDialog.selecionarLivros();

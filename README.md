@@ -1,6 +1,7 @@
 # **Sistema de Gerenciamento de Livraria**
 
 Bem-vindo ao **Sistema de Gerenciamento de Livraria**! Este sistema foi desenvolvido em **Java** para gerenciar o catálogo de uma livraria, com suporte para cadastro de livros, pesquisa avançada, geração de relatórios, e integração com a API OpenLibrary.
+Obs: A documentação completa (Javadoc) se encontra na pasta /Livraria1/target/reports/apidocs/index.html
 
 ---
 
@@ -13,7 +14,8 @@ Bem-vindo ao **Sistema de Gerenciamento de Livraria**! Este sistema foi desenvol
 - **Edição e Exclusão**:
   - Atualize ou exclua livros cadastrados diretamente na interface.
 - **Livros Similares**:
-  - Identificação e gerenciamento de livros relacionados pelo gênero.
+  - Identificação e gerenciamento de livros relacionados pelo gênero quando incluídos ou manualmente pelo usuário.
+  - A relação de similaridade não é mútua até o momento (será implementado futuramente).
 - **Pesquisa Avançada**:
   - Filtros dinâmicos por Título, Autor, Gênero, ISBN e Data de Publicação.
 - **Relatórios**:
