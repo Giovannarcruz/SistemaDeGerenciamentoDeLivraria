@@ -2,6 +2,7 @@ package giovanna.projeto.livraria1.services;
 
 import giovanna.projeto.livraria1.dao.LivroSimilaresDAO;
 import giovanna.projeto.livraria1.model.Livro;
+import giovanna.projeto.livraria1.util.ConnectionFactory;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
@@ -32,7 +33,7 @@ public class LivroSimilaresService {
      * @throws Exception
      */
     public boolean similaridadeExiste(int etiquetaLivro1, int etiquetaLivro2) throws Exception {
-        try {
+        try(Connection conn = ConnectionFactory.getConnection()) {
             return similaresDAO.similaridadeExiste(etiquetaLivro1, etiquetaLivro2);
         } catch (SQLException ex) {
             LOGGER.log(Level.SEVERE, "Erro ao verificar similaridade", ex);
@@ -47,7 +48,7 @@ public class LivroSimilaresService {
      * @throws Exception
      */
     public void adicionarLivroSimilar(int etiquetaLivro, int etiquetaSimilar) throws Exception {
-        try {
+        try(Connection conn = ConnectionFactory.getConnection()) {
             similaresDAO.adicionarLivroSimilar(etiquetaLivro, etiquetaSimilar);
         } catch (SQLException ex) {
             LOGGER.log(Level.SEVERE, "Erro ao adicionar similaridade", ex);
@@ -62,7 +63,7 @@ public class LivroSimilaresService {
      * @throws Exception
      */
     public void excluirLivroSimilar(int etiquetaLivro, int etiquetaSimilar) throws Exception {
-        try {
+        try (Connection conn = ConnectionFactory.getConnection()){
             similaresDAO.excluirLivroSimilar(etiquetaLivro, etiquetaSimilar);
         } catch (SQLException ex) {
             LOGGER.log(Level.SEVERE, "Erro ao excluir similaridade", ex);
@@ -78,7 +79,7 @@ public class LivroSimilaresService {
      * @throws Exception
      */
     public List<Livro> buscarLivrosSemelhantes(int etiquetaLivro) throws SQLException, Exception {
-        try {
+        try(Connection conn = ConnectionFactory.getConnection()) {
             return similaresDAO.buscarLivrosSemelhantesEtiquetas(etiquetaLivro);
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE, "Erro ao buscar livros semelhantes", ex);

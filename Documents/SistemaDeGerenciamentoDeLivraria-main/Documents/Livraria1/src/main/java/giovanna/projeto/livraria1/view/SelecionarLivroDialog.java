@@ -2,18 +2,23 @@ package giovanna.projeto.livraria1.view;
 
 import giovanna.projeto.livraria1.model.Livro;
 import giovanna.projeto.livraria1.services.LivroService;
+import giovanna.projeto.livraria1.util.ConnectionFactory;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.xml.rpc.ServiceException;
+import static org.hibernate.query.sqm.SqmTreeTransformationLogger.LOGGER;
+import org.jboss.logging.Logger;
 
 /**
- * Classe responsável pela exibição de uma janela para selecionar livros similares.
- * Esta janela permite ao usuário escolher livros já cadastrados, exceto o próprio livro em edição.
+ * Classe responsável pela exibição de uma janela para selecionar livros
+ * similares. Esta janela permite ao usuário escolher livros já cadastrados,
+ * exceto o próprio livro em edição.
  */
 public class SelecionarLivroDialog extends JDialog {
 
@@ -29,9 +34,10 @@ public class SelecionarLivroDialog extends JDialog {
 
     /**
      * Construtor da classe SelecionarLivroDialog.
-     * 
+     *
      * @param parent Janela pai que chamou o diálogo.
-     * @param etiquetaLivroAtual Etiqueta do livro atual em edição, para não permitir sua seleção.
+     * @param etiquetaLivroAtual Etiqueta do livro atual em edição, para não
+     * permitir sua seleção.
      */
     public SelecionarLivroDialog(Window parent, int etiquetaLivroAtual) {
         super(parent, "Selecionar Livros Similares", ModalityType.APPLICATION_MODAL);
@@ -46,7 +52,9 @@ public class SelecionarLivroDialog extends JDialog {
             @Override
             public Class<?> getColumnClass(int columnIndex) {
                 // A primeira coluna é uma checkbox
-                if (columnIndex == 0) return Boolean.class;
+                if (columnIndex == 0) {
+                    return Boolean.class;
+                }
                 return super.getColumnClass(columnIndex);
             }
 
@@ -84,8 +92,9 @@ public class SelecionarLivroDialog extends JDialog {
     }
 
     /**
-     * Carrega a lista de livros disponíveis para seleção, excluindo o livro atual.
-     * Preenche a tabela com os livros para que o usuário possa selecioná-los.
+     * Carrega a lista de livros disponíveis para seleção, excluindo o livro
+     * atual. Preenche a tabela com os livros para que o usuário possa
+     * selecioná-los.
      */
     private void carregarLivros() {
         try {
@@ -106,10 +115,12 @@ public class SelecionarLivroDialog extends JDialog {
     }
 
     /**
-     * Processa a seleção dos livros na tabela.
-     * Os livros selecionados (checkbox marcado) são adicionados à lista de livrosSelecionados.
+     * Processa a seleção dos livros na tabela. Os livros selecionados (checkbox
+     * marcado) são adicionados à lista de livrosSelecionados.
+     *
+     * @return Lista de etiquetas dos livros selecionados.
      */
-    private void selecionarLivros() {
+    List<Integer> selecionarLivros() {
         livrosSelecionados.clear(); // Limpa a lista de livros selecionados
 
         // Percorre as linhas da tabela para verificar quais checkboxes foram marcados
@@ -117,39 +128,14 @@ public class SelecionarLivroDialog extends JDialog {
             boolean selecionado = (boolean) modeloTabelaLivros.getValueAt(i, 0); // Obtém o estado da checkbox
             if (selecionado) {
                 int etiqueta = (int) modeloTabelaLivros.getValueAt(i, 1); // Obtém a etiqueta do livro
+
                 livrosSelecionados.add(etiqueta); // Adiciona à lista de livros selecionados
             }
         }
-
-        // Após selecionar os livros, chama o método para adicionar os livros similares
-        adicionarLivrosSimilares();
-
-        // Fecha o diálogo após a seleção
         dispose();
-    }
-
-    /**
-     * Adiciona os livros selecionados como similares ao livro atual.
-     * Este método chama o serviço para adicionar cada livro selecionado à lista de livros similares do livro atual.
-     */
-    private void adicionarLivrosSimilares() {
-        try {
-            for (int etiquetaSimilar : livrosSelecionados) {
-                // Adiciona a relação de similaridade entre o livro atual e os livros selecionados
-                livroService.adicionarLivroSimilar(etiquetaLivroAtual, etiquetaSimilar);
-            }
-            JOptionPane.showMessageDialog(this, "Livros similares adicionados com sucesso!");
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(this, "Erro ao adicionar livros similares: " + ex.getMessage());
-        }
-    }
-
-    /**
-     * Retorna a lista de livros selecionados.
-     * 
-     * @return Lista de etiquetas dos livros selecionados.
-     */
-    public List<Integer> getLivrosSelecionados() {
+        // Após selecionar os livros, chama o método para adicionar os livros similares
         return livrosSelecionados;
+
     }
+
 }

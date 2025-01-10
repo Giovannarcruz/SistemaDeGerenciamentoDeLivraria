@@ -82,7 +82,7 @@ public class LivroService {
             throw new ServiceException("Gênero é obrigatório.");
         }
          if (livro.getData_publicacao()== null) {
-            throw new ServiceException("Gênero é obrigatório.");
+            throw new ServiceException("Data de publicação é obrigatória.");
         }
         LOGGER.info("Validação concluída com sucesso.");
     }
@@ -202,7 +202,6 @@ public class LivroService {
      * @throws SQLException Caso ocorra erro de banco de dados.
      */
     public Livro buscaPorEtiqueta(int etiqueta) throws SQLException {
-        LivroDAO livroDAO = new LivroDAO(); // Cria uma instância de LivroDAO
         return livroDAO.buscarLivroPorEtiqueta(etiqueta); // Chama o método do DAO e retorna o livro
     }
 
@@ -353,12 +352,14 @@ public class LivroService {
      * de dados.
      */
     public void adicionarLivroSimilar(int etiquetaLivro, int etiquetaSimilar) throws SQLException {
+        try (Connection conn= ConnectionFactory.getConnection()){
         if (!verificarSimilarsExistem(etiquetaLivro, etiquetaSimilar)) {
             // Se a relação de similaridade não existir, insere no banco de dados.
             livroDAO.adicionarLivroSimilar(etiquetaLivro, etiquetaSimilar);
         } else {
             // Se a relação já existe, apenas loga ou retorna, sem fazer nada.
-            System.out.println("A relação de livros similares já existe.");
+            LOGGER.info("A relação de livros similares já existe.");
+        }
         }
     }
 
@@ -482,14 +483,13 @@ public class LivroService {
             }
         } catch (SQLException ex) {
             // Em caso de erro ao executar a consulta, imprime o erro
-            ex.printStackTrace();
+
         }
 
         return livros; // Retorna a lista de livros encontrados
     }
     public List<Livro> buscarLivrosPorFiltro(String filtro) throws ServiceException {
     try {
-        LivroDAO livroDAO = new LivroDAO();
         return livroDAO.buscarLivrosPorFiltro(filtro);
     } catch (SQLException ex) {
         LOGGER.log(Level.SEVERE, "Erro ao buscar livros por filtro", ex);

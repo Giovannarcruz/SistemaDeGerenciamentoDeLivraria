@@ -231,14 +231,20 @@ public class TelaCadastroLivros extends JPanel {
         }
 
         int etiqueta = (int) modeloTabela.getValueAt(linhaSelecionada, 0); // Obtém a etiqueta do livro
-        try {
-            LivroService service = new LivroService();
-            service.excluirLivro(etiqueta); // Exclui o livro
-            carregarLivros(); // Atualiza a tabela
-            JOptionPane.showMessageDialog(this, "Livro excluído com sucesso!");
-        } catch (HeadlessException | ServiceException ex) {
-            JOptionPane.showMessageDialog(this, "Erro ao excluir livro: " + ex.getMessage());
-            LOGGER.log(Level.SEVERE, "Erro ao excluir livro", ex);
+
+        int confirmacao = JOptionPane.showConfirmDialog(this,
+                "Deseja realmente excluir este livro?", "Confirmação de exclusão", JOptionPane.YES_NO_OPTION);
+
+        if (confirmacao == JOptionPane.YES_OPTION) {
+            try {
+                LivroService service = new LivroService();
+                service.excluirLivro(etiqueta); // Exclui o livro
+                carregarLivros(); // Atualiza a tabela
+                JOptionPane.showMessageDialog(this, "Livro excluído com sucesso!");
+            } catch (HeadlessException | ServiceException ex) {
+                JOptionPane.showMessageDialog(this, "Erro ao excluir livro: " + ex.getMessage());
+                LOGGER.log(Level.SEVERE, "Erro ao excluir livro", ex);
+            }
         }
     }
 

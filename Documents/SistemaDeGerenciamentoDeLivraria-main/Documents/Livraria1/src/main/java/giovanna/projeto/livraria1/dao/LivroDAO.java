@@ -354,7 +354,7 @@ public class LivroDAO {
      */
     public boolean verificarSimilarsExistem(int etiquetaLivro, int etiquetaSimilar) throws SQLException {
         // SQL para verificar se já existe uma relação entre os livros
-        String sql = "SELECT 1 FROM livros_semelhantes WHERE etiqueta_livro = ? AND etiqueta_similar = ?";
+        String sql = "SELECT 1 FROM livros_semelhantes WHERE etiqueta_livro = ? AND etiqueta_semelhante = ?";
 
         try (Connection connection = ConnectionFactory.getConnection(); PreparedStatement stmt = connection.prepareStatement(sql)) {
             // Define os parâmetros na consulta SQL
@@ -383,7 +383,7 @@ public class LivroDAO {
      * inserção SQL.
      */
     public void adicionarLivroSimilar(int etiquetaLivro, int etiquetaSimilar) throws SQLException {
-        String sql = "INSERT INTO livros_semelhantes (etiqueta_livro, etiqueta_similar) VALUES (?, ?)";
+        String sql = "INSERT INTO livros_semelhantes (etiqueta_livro, etiqueta_semelhante) VALUES (?, ?)";
         Connection connection = ConnectionFactory.getConnection();
         // Verifica se a relação já existe, se não, realiza a inserção
         if (!verificarSimilarsExistem(etiquetaLivro, etiquetaSimilar)) {

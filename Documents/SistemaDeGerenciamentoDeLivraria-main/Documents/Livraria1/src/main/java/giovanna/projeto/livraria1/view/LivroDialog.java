@@ -264,17 +264,25 @@ public class LivroDialog extends JDialog {
             return;
         }
 
+        // Abre o diálogo de seleção de livros similares
         SelecionarLivroDialog selecionarLivroDialog = new SelecionarLivroDialog(this, livro.getEtiqueta_livro());
         selecionarLivroDialog.setVisible(true);
 
-        List<Integer> selecionados = selecionarLivroDialog.getLivrosSelecionados();
+        // Obtém a lista de livros selecionados
+        List<Integer> selecionados = selecionarLivroDialog.selecionarLivros();
+
+        // Adiciona os livros similares selecionados
         try {
             for (int etiquetaSimilar : selecionados) {
                 similaresService.adicionarLivroSimilar(livro.getEtiqueta_livro(), etiquetaSimilar);
+                LOGGER.info("Similar adicionado " + etiquetaSimilar);
             }
+
+            // Atualiza a tabela de similares no diálogo principal
             carregarLivrosSimilares();
+            JOptionPane.showMessageDialog(this, "Livros similares adicionados com sucesso!");
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Erro ao incluir livro similar: " + ex.getMessage());
+            JOptionPane.showMessageDialog(this, "Erro ao incluir livros similares: " + ex.getMessage());
         }
     }
 
@@ -292,6 +300,7 @@ public class LivroDialog extends JDialog {
         try {
             similaresService.excluirLivroSimilar(livro.getEtiqueta_livro(), etiquetaSimilar);
             carregarLivrosSimilares();
+            
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Erro ao excluir livro similar: " + ex.getMessage());
         }
@@ -354,7 +363,10 @@ public class LivroDialog extends JDialog {
 
             modeloTabelaSimilares.setRowCount(0); // Limpa a tabela
             for (Livro similar : similares) {
-                modeloTabelaSimilares.addRow(new Object[]{similar.getEtiqueta_livro(), similar.getTitulo(), similar.getAutor()});
+                if (similar.getEtiqueta_livro() != livro.getEtiqueta_livro()) { // Evita auto-referência
+                    modeloTabelaSimilares.addRow(new Object[]{similar.getEtiqueta_livro(), similar.getTitulo(), similar.getAutor()});
+
+                }
             }
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Erro ao carregar livros similares: " + ex.getMessage());
