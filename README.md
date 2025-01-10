@@ -13,7 +13,8 @@ Bem-vindo ao **Sistema de Gerenciamento de Livraria**! Este sistema foi desenvol
 - **Edição e Exclusão**:
   - Atualize ou exclua livros cadastrados diretamente na interface.
 - **Livros Similares**:
-  - Identificação e gerenciamento de livros relacionados pelo gênero.
+  - Identificação e gerenciamento de livros relacionados pelo gênero quando incluídos ou manualmente pelo usuário.
+  - A relação de similaridade não é mútua até o momento (será implementado futuramente).
 - **Pesquisa Avançada**:
   - Filtros dinâmicos por Título, Autor, Gênero, ISBN e Data de Publicação.
 - **Relatórios**:
