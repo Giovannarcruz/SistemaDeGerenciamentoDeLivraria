@@ -44,6 +44,9 @@ public class TelaFiltrarLivros extends JPanel {
     // Formato de exibição da data para a tabela
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
+    // Botão para visualizar os detalhes do livro
+    private final JButton btnDetalhes = new JButton("Detalhes");
+
     /**
      * Construtor da classe TelaFiltrarLivros. Configura os componentes visuais
      * e a lógica associada.
@@ -76,6 +79,13 @@ public class TelaFiltrarLivros extends JPanel {
                 Logger.getLogger(TelaFiltrarLivros.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
+        // Adiciona os botões de ação na parte inferior
+        JPanel panelBotoes = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        panelBotoes.add(btnDetalhes);
+        add(panelBotoes, BorderLayout.SOUTH);
+
+        // Configura a ação do botão "Detalhes"
+        btnDetalhes.addActionListener(e -> abrirDetalhesLivroDialog());
 
         // Carrega todos os livros no início
         carregarLivros(null, null, null, null, null);
@@ -215,4 +225,33 @@ public class TelaFiltrarLivros extends JPanel {
             });
         }
     }
+
+    /**
+     * Abre o diálogo de detalhes do livro selecionado.
+     */
+    private void abrirDetalhesLivroDialog() {
+        int linhaSelecionada = tabelaLivros.getSelectedRow(); // Obtém a linha selecionada
+        if (linhaSelecionada == -1) {
+            JOptionPane.showMessageDialog(this, "Selecione um livro para visualizar os detalhes.");
+            return;
+        }
+
+        // Obtém a etiqueta do livro selecionado
+        int etiqueta = (int) modeloTabela.getValueAt(linhaSelecionada, 0);
+
+        try {
+            Livro livro = livroService.buscaPorEtiqueta(etiqueta); // Busca o livro pelo serviço
+            if (livro != null) {
+                JFrame parentFrame = (JFrame) SwingUtilities.getWindowAncestor(this); // Obtém a janela pai
+                DetalhesLivroDialog detalhesDialog = new DetalhesLivroDialog(parentFrame, livro); // Cria o diálogo
+                detalhesDialog.setVisible(true); // Exibe o diálogo
+            } else {
+                JOptionPane.showMessageDialog(this, "Livro não encontrado.");
+            }
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Erro ao buscar detalhes do livro: " + ex.getMessage());
+            Logger.getLogger(TelaFiltrarLivros.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
 }

@@ -137,26 +137,6 @@ public class LivroDAO {
     }
 
     /**
-     * Busca um livro pelo número de etiqueta.
-     *
-     * @param etiquetaLivro Número da etiqueta do livro.
-     * @return Livro correspondente ou null se não encontrado.
-     * @throws SQLException Caso ocorra um erro ao realizar a operação no banco.
-     */
-    public Livro busca_porEtiqueta(int etiquetaLivro) throws SQLException {
-        try (Connection connection = ConnectionFactory.getConnection(); PreparedStatement stmt = connection.prepareStatement(SELECT_LIVRO_ETIQUETA_SQL)) {
-
-            stmt.setInt(1, etiquetaLivro);
-            try (ResultSet rs = stmt.executeQuery()) {
-                return rs.next() ? criarLivroDoResultSet(rs) : null;
-            }
-        } catch (SQLException e) {
-            LOGGER.log(Level.SEVERE, "Erro ao buscar livro por etiqueta: " + etiquetaLivro, e);
-            throw e;
-        }
-    }
-
-    /**
      * Busca um livro por etiqueta (chave primária).
      *
      * @param etiqueta A etiqueta do livro a ser buscado.
@@ -165,24 +145,49 @@ public class LivroDAO {
      */
     public Livro buscarLivroPorEtiqueta(int etiqueta) throws SQLException {
         Livro livro = null;
-        String sql = "SELECT * FROM livros WHERE etiqueta_livro = ?";
+
+        // Consulta ajustada para unir as tabelas `livros` e `generos`
+        String sql = """
+        SELECT 
+            livros.etiqueta_livro, 
+            livros.isbn, 
+            livros.titulo, 
+            livros.autor, 
+            livros.editora, 
+            livros.data_publicacao, 
+            livros.genero_id,
+            generos.nome AS genero_nome
+        FROM 
+            livros
+        LEFT JOIN 
+            generos ON livros.genero_id = generos.id
+        WHERE 
+            livros.etiqueta_livro = ?
+    """;
 
         try (Connection connection = ConnectionFactory.getConnection(); PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, etiqueta); // Define o parâmetro da etiqueta
-            ResultSet resultSet = statement.executeQuery();
 
-            if (resultSet.next()) {
-                livro = new Livro();
-                livro.setEtiqueta_livro(resultSet.getInt("etiqueta_livro"));
-                livro.setIsbn(resultSet.getString("isbn"));
-                livro.setTitulo(resultSet.getString("titulo"));
-                livro.setAutor(resultSet.getString("autor"));
-                livro.setEditora(resultSet.getString("editora"));
-                livro.setGenero_id(Integer.parseInt(resultSet.getString("genero_id")));
-                Date sqlDate = resultSet.getDate("data_publicacao");
-                livro.setData_publicacao((sqlDate != null) ? sqlDate.toLocalDate() : null);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    livro = new Livro();
+                    livro.setEtiqueta_livro(resultSet.getInt("etiqueta_livro"));
+                    livro.setIsbn(resultSet.getString("isbn"));
+                    livro.setTitulo(resultSet.getString("titulo"));
+                    livro.setAutor(resultSet.getString("autor"));
+                    livro.setEditora(resultSet.getString("editora"));
+
+                    // Gênero
+                    livro.setGenero_id(resultSet.getInt("genero_id"));
+                    livro.setGeneroNome(resultSet.getString("genero_nome"));
+
+                    // Data de publicação
+                    Date sqlDate = resultSet.getDate("data_publicacao");
+                    livro.setData_publicacao((sqlDate != null) ? sqlDate.toLocalDate() : null);
+                }
             }
         }
+
         return livro;
     }
 
@@ -418,7 +423,7 @@ public class LivroDAO {
             stmt.setString(5, filtroLike); // Filtro em etiqueta (convertido para texto)
             stmt.setString(6, filtroLike); // Filtro em data_publicacao (convertido para texto)
             stmt.setString(7, filtroLike); // Filtro em editora
-            
+
             // Executa a consulta e processa os resultados
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
